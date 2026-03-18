@@ -10,17 +10,18 @@
   --color-fire-yellow: #eab308;
   --color-fire-dark: #7f1d1d;
   --color-fire-black: #450a0a;
-  --color-fire-bg: #fff7ed;
+  --color-fire-bg: #1A1A1A;
 }
 
 body {
   font-family: var(--font-sans);
   background-color: var(--color-fire-bg);
-  color: #333;
+  color: #f3f4f6;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
+  color: #ffffff;
 }
 
 .btn-bouncy {

@@ -1,15 +1,17 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { Flame, Compass, Download } from "lucide-react";
 import { Button } from "@/src/components/Button";
 import confetti from "canvas-confetti";
 import html2canvas from "html2canvas";
+import { FireParticles } from "@/src/components/FireParticles";
 
 export function SharedNote() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [note, setNote] = useState("");
+  const [isRevealed, setIsRevealed] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -20,7 +22,9 @@ export function SharedNote() {
         setNote("Invalid note format.");
       }
       
-      // Trigger cool animation
+      // Trigger reveal animation and confetti
+      setTimeout(() => setIsRevealed(true), 500);
+      
       const duration = 3000;
       const end = Date.now() + duration;
 
@@ -74,10 +78,14 @@ export function SharedNote() {
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 mix-blend-overlay"></div>
       </div>
 
+      <AnimatePresence>
+        {isRevealed && <FireParticles />}
+      </AnimatePresence>
+
       <motion.div
-        initial={{ scale: 0.8, opacity: 0, rotate: -2 }}
-        animate={{ scale: 1, opacity: 1, rotate: 0 }}
-        transition={{ type: "spring", bounce: 0.5 }}
+        initial={{ scale: 0.8, opacity: 0, filter: "brightness(2) blur(10px)" }}
+        animate={{ scale: 1, opacity: 1, filter: "brightness(1) blur(0px)" }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
         className="z-10 w-full max-w-lg flex flex-col gap-4"
       >
         {/* The Card itself - designed to be screenshotted */}

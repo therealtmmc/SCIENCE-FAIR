@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useScroll, useSpring } from "motion/react";
 import { Info, Users, Gamepad2 } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 import { useEffect, useState } from "react";
@@ -8,6 +8,12 @@ import { CustomFireExtinguisher } from "./icons";
 export function Layout() {
   const location = useLocation();
   const [time, setTime] = useState(new Date());
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
@@ -37,6 +43,10 @@ export function Layout() {
 
       {/* Top Header Bar - Orange */}
       <header className="bg-[#FF6D00] border-b border-orange-600 sticky top-0 z-50 shadow-2xl">
+        <motion.div
+          className="fixed top-0 left-0 right-0 h-1 bg-white origin-left z-50"
+          style={{ scaleX }}
+        />
         <div className="max-w-[1600px] mx-auto px-6 py-4 flex flex-col lg:flex-row justify-between items-center gap-4">
           
           {/* Logo Area */}

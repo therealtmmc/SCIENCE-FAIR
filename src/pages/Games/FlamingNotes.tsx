@@ -1,13 +1,15 @@
 import { useState, useRef } from "react";
 import { QRCodeSVG } from "qrcode.react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { MessageSquare, Share2, Flame, Download } from "lucide-react";
 import { Button } from "@/src/components/Button";
 import { toPng } from "html-to-image";
+import { FireParticles } from "@/src/components/FireParticles";
 
 export function FlamingNotes() {
   const [note, setNote] = useState("");
   const [sharedUrl, setSharedUrl] = useState("");
+  const [isBurning, setIsBurning] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
   const handleShare = () => {
@@ -41,6 +43,8 @@ export function FlamingNotes() {
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#FF6D00]/10 rounded-full blur-[100px]" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#D32F2F]/10 rounded-full blur-[100px]" />
       </div>
+      
+      {isBurning && <FireParticles />}
 
       <div className="text-center mb-8 relative z-10">
         <div className="inline-block bg-[#2A2A2A] p-4 rounded-full mb-4 shadow-[0_0_20px_rgba(255,109,0,0.3)] border border-white/10">
@@ -71,44 +75,61 @@ export function FlamingNotes() {
             <span className="text-sm text-gray-500 font-bold">{note.length}/200</span>
             <Button
               variant="primary"
-              onClick={handleShare}
+              onClick={() => {
+                setIsBurning(true);
+                setTimeout(() => {
+                  handleShare();
+                  setIsBurning(false);
+                }, 2000);
+              }}
               disabled={!note.trim()}
               className="flex items-center gap-2 shadow-[0_0_15px_rgba(255,109,0,0.4)]"
             >
               <Share2 className="w-5 h-5" /> Share Note
             </Button>
           </div>
+          <p className="text-xs text-gray-600 mt-4 text-center italic">
+            For entertainment purposes only.
+          </p>
         </motion.div>
       ) : (
         <div className="flex flex-col gap-4 w-full max-w-md relative z-10">
           <motion.div
             ref={cardRef}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="w-full bg-gradient-to-b from-[#2A2A2A] to-[#121212] p-10 rounded-[2rem] shadow-2xl border border-white/5 text-center relative overflow-hidden flex flex-col items-center"
+            initial={{ opacity: 0, scale: 0.8, filter: "brightness(2) blur(10px)" }}
+            animate={{ opacity: 1, scale: 1, filter: "brightness(1) blur(0px)" }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="w-full max-w-[360px] bg-gradient-to-tr from-[#1A1A1A] via-[#2A1A1A] to-[#1A1A1A] p-6 rounded-3xl shadow-[0_0_60px_rgba(255,109,0,0.4)] border-4 border-[#FF6D00] text-center flex flex-col gap-4 relative overflow-hidden"
           >
-            {/* Top Orange Glow */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1 bg-[#FF6D00] shadow-[0_0_30px_#FF6D00]" />
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-20 bg-[#FF6D00]/20 blur-[50px] pointer-events-none" />
-            
-            {/* Icon */}
-            <div className="bg-[#1A1A1A] w-20 h-20 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(255,109,0,0.15)] mb-8 relative z-10">
-              <Flame className="w-10 h-10 text-[#FF6D00]" strokeWidth={1.5} />
+            {/* Fire Background Effects */}
+            <div className="absolute inset-0 opacity-20 pointer-events-none">
+              <div className="absolute -top-10 -left-10 w-32 h-32 bg-[#FF6D00] rounded-full blur-[60px]" />
+              <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-[#D32F2F] rounded-full blur-[60px]" />
             </div>
-            
-            {/* Title */}
-            <h3 className="text-3xl font-black text-white mb-8 uppercase tracking-widest leading-tight relative z-10">
-              APULA SHARING<br/>CARD
-            </h3>
-            
-            {/* QR Code */}
-            <div className="bg-white p-4 rounded-2xl inline-block border-4 border-[#FF6D00] mb-8 relative z-10 w-full max-w-[240px] aspect-square flex items-center justify-center">
-              <QRCodeSVG value={sharedUrl} size={200} level="H" style={{ width: '100%', height: '100%' }} />
+
+            <div className="flex flex-row items-center justify-between gap-4 w-full z-10">
+              <div className="flex flex-col items-center justify-center flex-1">
+                {/* Fire Icon */}
+                <div className="relative mb-2">
+                  <div className="absolute inset-0 bg-[#FF6D00] blur-lg opacity-50 rounded-full animate-pulse" />
+                  <Flame className="w-10 h-10 text-[#FF6D00] relative z-10" strokeWidth={1.5} />
+                </div>
+                
+                {/* Title */}
+                <h3 className="text-sm font-black text-white uppercase tracking-widest drop-shadow-[0_0_10px_rgba(255,109,0,0.8)]">
+                  APULA<br/>SHARING CARD
+                </h3>
+              </div>
+              
+              {/* QR Code */}
+              <div className="bg-white p-2 rounded-xl border-2 border-[#FF6D00] w-28 h-28 flex items-center justify-center shrink-0">
+                <QRCodeSVG value={sharedUrl} size={112} level="H" style={{ width: '100%', height: '100%' }} />
+              </div>
             </div>
             
             {/* Footer Text */}
-            <p className="text-gray-300 font-medium text-lg relative z-10 leading-relaxed">
-              Scan this QR code to view the<br/>flaming note!
+            <p className="text-gray-200 font-bold text-xs uppercase tracking-widest z-10 w-full border-t border-white/10 pt-4">
+              Scan to read the message inside
             </p>
           </motion.div>
 
