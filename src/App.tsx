@@ -17,6 +17,7 @@ import { OutFire } from "./pages/Games/OutFire";
 import { GuessOrFire } from "./pages/Games/GuessOrFire";
 import { HotButton } from "./pages/Games/HotButton";
 import { FlamingNotes } from "./pages/Games/FlamingNotes";
+import { FlamingNotesQR } from "./pages/Games/FlamingNotesQR";
 import { SharedNote } from "./pages/Games/SharedNote";
 
 export default function App() {
@@ -40,6 +41,7 @@ export default function App() {
           </Route>
         </Route>
         <Route path="/flaming-notes/view/:id" element={<SharedNote />} />
+        <Route path="/flaming-notes/qr/:encodedNote" element={<FlamingNotesQR />} />
       </Routes>
     </BrowserRouter>
   );

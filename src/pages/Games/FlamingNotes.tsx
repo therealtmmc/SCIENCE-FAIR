@@ -9,6 +9,7 @@ import { FireParticles } from "@/src/components/FireParticles";
 export function FlamingNotes() {
   const [note, setNote] = useState("");
   const [sharedUrl, setSharedUrl] = useState("");
+  const [noteUrl, setNoteUrl] = useState("");
   const [isBurning, setIsBurning] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -16,8 +17,10 @@ export function FlamingNotes() {
     if (!note.trim()) return;
     // Encode the note in the URL
     const encodedNote = encodeURIComponent(note);
-    const url = `${window.location.origin}/flaming-notes/view/${encodedNote}`;
-    setSharedUrl(url);
+    const noteUrl = `${window.location.origin}/flaming-notes/view/${encodedNote}`;
+    const qrPageUrl = `${window.location.origin}/flaming-notes/qr/${encodedNote}`;
+    setSharedUrl(qrPageUrl);
+    setNoteUrl(noteUrl);
   };
 
   const handleSavePhoto = async () => {
@@ -128,7 +131,7 @@ export function FlamingNotes() {
                 rel="noopener noreferrer" 
                 className="bg-white p-2 rounded-xl border-2 border-[#FF6D00] w-28 h-28 flex items-center justify-center shrink-0 hover:scale-105 transition-transform cursor-pointer"
               >
-                <QRCodeSVG value={sharedUrl} size={112} level="H" style={{ width: '100%', height: '100%' }} />
+                <QRCodeSVG value={noteUrl} size={112} level="H" style={{ width: '100%', height: '100%' }} />
               </a>
             </div>
             
@@ -150,6 +153,7 @@ export function FlamingNotes() {
               variant="secondary"
               onClick={() => {
                 setSharedUrl("");
+                setNoteUrl("");
                 setNote("");
               }}
               className="flex-1 border border-white/10"
