@@ -2,7 +2,7 @@ import { motion } from "motion/react";
 import { Info, Users, Gamepad2, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { CustomFireExtinguisher } from "../components/icons";
-import { BentoGrid } from "../components/BentoGrid";
+import { FireStatsDashboard } from "../components/FireStatsDashboard";
 
 export function Home() {
   return (
@@ -36,8 +36,8 @@ export function Home() {
         </div>
       </motion.div>
 
-      {/* How it Works */}
-      <BentoGrid />
+      {/* Fire Statistics */}
+      <FireStatsDashboard />
 
       {/* Navigation Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
