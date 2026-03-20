@@ -17,8 +17,16 @@ export function SharedNote() {
   useEffect(() => {
     if (id) {
       try {
-        setNote(new TextDecoder().decode(Uint8Array.from(atob(decodeURIComponent(id)), c => c.charCodeAt(0))));
+        // Decode URI component first, then atob, then TextDecoder
+        const decodedUri = decodeURIComponent(id);
+        const binaryString = atob(decodedUri);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+        setNote(new TextDecoder().decode(bytes));
       } catch (e) {
+        console.error("Decoding error:", e);
         setNote("Invalid note format.");
       }
       
