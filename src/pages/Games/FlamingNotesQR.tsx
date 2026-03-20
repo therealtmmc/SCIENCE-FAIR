@@ -5,8 +5,15 @@ import { QrCode, ChevronRight, Copy } from "lucide-react";
 export function FlamingNotesQR() {
   const [searchParams] = useSearchParams();
   const encodedNote = searchParams.get("note");
-  const note = encodedNote ? new TextDecoder().decode(Uint8Array.from(atob(encodedNote), c => c.charCodeAt(0))) : "";
-  const noteUrl = `${window.location.origin}/flaming-notes/view/${encodeURIComponent(btoa(String.fromCharCode(...new TextEncoder().encode(note))))}`;
+  
+  const decodeUrlSafeBase64 = (str: string) => {
+    let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+    while (base64.length % 4) base64 += '=';
+    return base64;
+  };
+
+  const note = encodedNote ? new TextDecoder().decode(Uint8Array.from(atob(decodeUrlSafeBase64(encodedNote)), c => c.charCodeAt(0))) : "";
+  const noteUrl = `${window.location.origin}/flaming-notes/view/${encodedNote}`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(noteUrl);

@@ -16,7 +16,10 @@ export function FlamingNotes() {
   const handleShare = () => {
     if (!note.trim()) return;
     // Encode the note in the URL using base64 and then encodeURIComponent
-    const encodedNote = encodeURIComponent(btoa(String.fromCharCode(...new TextEncoder().encode(note))));
+    // Use URL-safe base64 characters (replace + with -, / with _, and remove =)
+    const base64 = btoa(String.fromCharCode(...new TextEncoder().encode(note)));
+    const urlSafeBase64 = base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    const encodedNote = encodeURIComponent(urlSafeBase64);
     const noteUrl = `${window.location.origin}/flaming-notes/view/${encodedNote}`;
     const qrPageUrl = `${window.location.origin}/flaming-notes/qr?note=${encodedNote}`;
     setSharedUrl(qrPageUrl);

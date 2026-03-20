@@ -17,9 +17,11 @@ export function SharedNote() {
   useEffect(() => {
     if (id) {
       try {
-        // Decode URI component first, then atob, then TextDecoder
-        const decodedUri = decodeURIComponent(id);
-        const binaryString = atob(decodedUri);
+        // Decode URL-safe base64
+        let base64 = id.replace(/-/g, '+').replace(/_/g, '/');
+        while (base64.length % 4) base64 += '=';
+        
+        const binaryString = atob(base64);
         const bytes = new Uint8Array(binaryString.length);
         for (let i = 0; i < binaryString.length; i++) {
           bytes[i] = binaryString.charCodeAt(i);
