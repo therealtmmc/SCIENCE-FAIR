@@ -15,10 +15,10 @@ export function FlamingNotes() {
 
   const handleShare = () => {
     if (!note.trim()) return;
-    // Encode the note in the URL
-    const encodedNote = encodeURIComponent(note);
+    // Encode the note in the URL using base64 and then encodeURIComponent
+    const encodedNote = encodeURIComponent(btoa(encodeURIComponent(note)));
     const noteUrl = `${window.location.origin}/flaming-notes/view/${encodedNote}`;
-    const qrPageUrl = `${window.location.origin}/flaming-notes/qr/${encodedNote}`;
+    const qrPageUrl = `${window.location.origin}/flaming-notes/qr?note=${encodedNote}`;
     setSharedUrl(qrPageUrl);
     setNoteUrl(noteUrl);
   };
@@ -131,7 +131,7 @@ export function FlamingNotes() {
                 rel="noopener noreferrer" 
                 className="bg-white p-2 rounded-xl border-2 border-[#FF6D00] w-28 h-28 flex items-center justify-center shrink-0 hover:scale-105 transition-transform cursor-pointer"
               >
-                <QRCodeSVG value={noteUrl} size={112} level="H" style={{ width: '100%', height: '100%' }} />
+                <QRCodeSVG value={sharedUrl} size={112} level="H" style={{ width: '100%', height: '100%' }} />
               </a>
             </div>
             

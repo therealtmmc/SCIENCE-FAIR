@@ -41,7 +41,7 @@ export default function App() {
           </Route>
         </Route>
         <Route path="/flaming-notes/view/:id" element={<SharedNote />} />
-        <Route path="/flaming-notes/qr/:encodedNote" element={<FlamingNotesQR />} />
+        <Route path="/flaming-notes/qr" element={<FlamingNotesQR />} />
       </Routes>
     </BrowserRouter>
   );
