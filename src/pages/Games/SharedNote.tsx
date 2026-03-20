@@ -21,12 +21,17 @@ export function SharedNote() {
         let base64 = id.replace(/-/g, '+').replace(/_/g, '/');
         while (base64.length % 4) base64 += '=';
         
-        const binaryString = atob(base64);
-        const bytes = new Uint8Array(binaryString.length);
-        for (let i = 0; i < binaryString.length; i++) {
-          bytes[i] = binaryString.charCodeAt(i);
+        try {
+          const binaryString = atob(base64);
+          const bytes = new Uint8Array(binaryString.length);
+          for (let i = 0; i < binaryString.length; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+          }
+          setNote(new TextDecoder().decode(bytes));
+        } catch (e) {
+          // Fallback to plain URL-encoded string
+          setNote(decodeURIComponent(id));
         }
-        setNote(new TextDecoder().decode(bytes));
       } catch (e) {
         console.error("Decoding error:", e);
         setNote("Invalid note format.");
