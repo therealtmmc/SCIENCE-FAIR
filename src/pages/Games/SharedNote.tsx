@@ -17,7 +17,7 @@ export function SharedNote() {
   useEffect(() => {
     if (id) {
       try {
-        setNote(decodeURIComponent(atob(decodeURIComponent(id))));
+        setNote(new TextDecoder().decode(Uint8Array.from(atob(decodeURIComponent(id)), c => c.charCodeAt(0))));
       } catch (e) {
         setNote("Invalid note format.");
       }

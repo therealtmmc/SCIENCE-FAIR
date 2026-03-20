@@ -16,7 +16,7 @@ export function FlamingNotes() {
   const handleShare = () => {
     if (!note.trim()) return;
     // Encode the note in the URL using base64 and then encodeURIComponent
-    const encodedNote = encodeURIComponent(btoa(encodeURIComponent(note)));
+    const encodedNote = encodeURIComponent(btoa(String.fromCharCode(...new TextEncoder().encode(note))));
     const noteUrl = `${window.location.origin}/flaming-notes/view/${encodedNote}`;
     const qrPageUrl = `${window.location.origin}/flaming-notes/qr?note=${encodedNote}`;
     setSharedUrl(qrPageUrl);
